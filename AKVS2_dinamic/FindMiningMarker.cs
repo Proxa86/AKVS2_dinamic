@@ -12,12 +12,69 @@ namespace AKVS2_dinamic
     class FindMiningMarker
     {
         SaveFileDialog saveFile;
-
+        static public List<NotCallFunctions> lNotCallFunctions { get; set; }
         public FindMiningMarker()
         {
             saveFile = new SaveFileDialog();
 
         }
+
+        public void findFunc(string path)
+        {
+            string[] allLinesInFile = File.ReadAllLines(path);
+            //saveFile.FileName = "akvs_dyn_thread_2.log";
+            //File.WriteAllText(saveFile.FileName, "",Encoding.ASCII);
+            lNotCallFunctions = new List<NotCallFunctions>();
+            int i = 0;
+            foreach (var line in allLinesInFile)
+            {
+                //string paternFind = "called";
+                string paternFind = "not_called";
+
+                Regex regex = new Regex(paternFind);
+                Match matchCall = regex.Match(line);
+
+                while (matchCall.Success)
+                {
+                    ++i;
+                    NotCallFunctions notCallFunction = new NotCallFunctions();
+                    paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                    regex = new Regex(paternFind);
+                    Match match = regex.Match(line);
+                    if (match.Success)
+                    {
+                        
+                        notCallFunction.QidIn = match.Value;
+                        //File.AppendAllText(saveFile.FileName, match.Value + ":f:i\n", Encoding.ASCII);
+                        //string second = match.Value;
+                        paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;*,&]*\\){1}";
+                        //paternFind = "\\w+\\:{0,2}\\w+\\({1}[\\w\\s:;*,&]*\\){1}";
+                        //paternFind = "\\w+\\:{2}\\w+\\({1}[\\w\\s*,]*\\){1}";
+                        regex = new Regex(paternFind);
+                        match = regex.Match(line);
+                        //match = match.NextMatch().NextMatch().NextMatch();
+                        if (match.Success)
+                        {
+                            notCallFunction.NameFunction = match.Value;
+                            //File.AppendAllText(saveFile.FileName, match.Value + ":f:i\n", Encoding.ASCII);
+                            //File.AppendAllText(saveFile.FileName, match.Value + ":f:o\n", Encoding.ASCII);
+                        }
+                        else
+                        {
+                            paternFind = "\\w+\\:{2}\\w+\\:{2}\\w+";
+                            regex = new Regex(paternFind);
+                            match = regex.Match(line);
+                            notCallFunction.NameFunction = match.Value;
+                        }
+                        //File.AppendAllText(saveFile.FileName, second + ":f:o\n", Encoding.ASCII);
+                        lNotCallFunctions.Add(notCallFunction);
+                        break;                       
+                    }                    
+                }
+            }
+            Console.WriteLine(i);
+        }
+
         public void findLinkFunc(string path)
         {
             string[] allLinesInFile = File.ReadAllLines(path);

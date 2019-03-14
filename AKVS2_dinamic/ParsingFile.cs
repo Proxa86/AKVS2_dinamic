@@ -49,6 +49,11 @@ namespace AKVS2_dinamic
 
                         switch(match.Value)
                         {
+                            case "2.txt":
+                                {
+                                    findMiningMarker.findFunc(path);
+                                }
+                                break;
                             case "3.txt":
                                 {
                                     findMiningMarker.findLinkFunc(path);

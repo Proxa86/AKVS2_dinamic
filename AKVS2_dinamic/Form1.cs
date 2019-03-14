@@ -22,5 +22,11 @@ namespace AKVS2_dinamic
             OpenFolder openFolder = new OpenFolder();
             openFolder.openFolderWithFiles();
         }
+
+        private void buttonPrintReportExcel_Click(object sender, EventArgs e)
+        {
+            BuildReport buildReport = new BuildReport();
+            buildReport.buildReportExcel();
+        }
     }
 }
