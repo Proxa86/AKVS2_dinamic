@@ -8,28 +8,17 @@ namespace AKVS2_dinamic
 {
     class BuildReport
     {
-        //public void buildReportExcel(int index)
+        //public bool flagWriteInFile = false;
+        //public void buildReport(int index)
         //{
         //    WorkExcel workExcel = new WorkExcel();
 
         //    switch (index)
         //    {
         //        case 0:
-        //            workExcel.DisplayInExcelFoundMarker(ComparisonTmpMarkers.lResultAllMarkers);
+        //            workExcel.DisplayNotCallFunctions(FindMiningMarker.lNotCallFunctions);
         //            break;
-        //        case 1:
-        //            workExcel.DisplayInExcelNotFoundMarker(ComparisonTmpMarkers.lResultNotFoundMarker);
-        //            break;
-        //        case 2:
-        //            workExcel.DisplayInExcelFoundInBinMarker(ComparisonTmpMarkers.lResultMarkersInBin);
-        //            break;
-        //    }            
+        //    }
         //}
-
-        public void buildReportExcel()
-        {
-            WorkExcel workExcel = new WorkExcel();
-            workExcel.DisplayNotCallFunctions(FindMiningMarker.lNotCallFunctions);
-        }
     }
 }

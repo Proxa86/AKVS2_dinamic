@@ -10,6 +10,17 @@ namespace AKVS2_dinamic
 {
     class OpenFolder
     {
+        Form1 CopyForm { get; set; }
+
+        public OpenFolder()
+        {   
+        }
+
+        public OpenFolder(Form1 f)
+        {
+            CopyForm = f;
+            f.LabelInformation = "Please, choose folder for analise.";
+        }
 
         public void openFolderWithFiles()
         {
@@ -21,10 +32,8 @@ namespace AKVS2_dinamic
             {
                 try
                 {
-                    ParsingFile parsingFile = new ParsingFile(fbd);
-                    parsingFile.parsingReport();
-                    //FindTmpMarker findTmpMarker = new FindTmpMarker(fbd);
-                    //findTmpMarker.findTmpMarkerWithSrc();
+                    SelectFile selectFile = new SelectFile(fbd, CopyForm);
+                    selectFile.parsingReport();
                 }
                 catch(Exception e)
                 {
@@ -32,26 +41,5 @@ namespace AKVS2_dinamic
                 }
             }
         }
-
-        //public void openFolderWithBin()
-        //{
-        //    FolderBrowserDialog fbd = new FolderBrowserDialog();
-        //    fbd.SelectedPath = @"C:\";
-        //    fbd.ShowNewFolderButton = false;
-
-        //    if (fbd.ShowDialog() == DialogResult.OK)
-        //    {
-        //        try
-        //        {
-        //            FindTmpMarker findTmpMarker = new FindTmpMarker(fbd);
-        //            findTmpMarker.findTmpMarkerWithBin();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            MessageBox.Show("Error: can't open folder.\nOriginal error: " + e.Message);
-        //        }
-        //    }
-        //}
-
     }
 }

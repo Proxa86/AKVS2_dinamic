@@ -9,32 +9,32 @@ using System.Windows.Forms;
 
 namespace AKVS2_dinamic
 {
-    class ParsingFile
+    class SelectFile
     {
         FolderBrowserDialog fbd;
-       
+        Form1 CopyForm { get; set; }
 
-        public ParsingFile()
+        public SelectFile()
         {
-            
-            
         }
 
-        public ParsingFile(FolderBrowserDialog fbd)
+        public SelectFile(FolderBrowserDialog fbd, Form1 f)
         {
             this.fbd = fbd;
-            
+            CopyForm = f;
         }
+
 
         public void parsingReport()
         {
             List<string[]> lParentFilters = new List<string[]>();
           
             lParentFilters.Add(Directory.GetFiles(fbd.SelectedPath, "*", SearchOption.AllDirectories));
+            
 
             try
             {
-                FindMiningMarker findMiningMarker = new FindMiningMarker();
+                FindMiningMarker findMiningMarker = new FindMiningMarker(CopyForm);
 
                 //File.WriteAllText(saveFile.FileName, "");
                 List<Numbers> numbers = new List<Numbers>();
@@ -51,56 +51,35 @@ namespace AKVS2_dinamic
                         {
                             case "2.txt":
                                 {
+                                    CopyForm.LabelInformation = "Processing file with functions.";
+                                    CopyForm.Refresh();
                                     findMiningMarker.findFunc(path);
+                                    CopyForm.LabelInformation = "Processing end.";
+                                    CopyForm.Refresh();
                                 }
                                 break;
                             case "3.txt":
                                 {
+                                    CopyForm.LabelInformation = "Processing file link function - function.";
+                                    CopyForm.Refresh();
                                     findMiningMarker.findLinkFunc(path);
+                                    CopyForm.LabelInformation = "Processing end.";
+                                    CopyForm.Refresh();
                                 }
                                 break;
                             case "5.txt":
                                 {
+                                    CopyForm.LabelInformation = "Processing file link branch - branch.";
+                                    CopyForm.Refresh();
                                     findMiningMarker.findLinkBranch(path);
+                                    CopyForm.LabelInformation = "Processing end.";
+                                    CopyForm.Refresh();
                                 }
                                 break;
                         }
-
-                        //string[] allLinesInFile = File.ReadAllLines(path);
-
-                        //foreach (var line in allLinesInFile)
-                        //{
-                        //    //string paternFind = "not_called";
-                        //    string paternFind = "not_called";
-
-                        //    Regex regex = new Regex(paternFind);
-                        //    Match matchCall = regex.Match(line);
-
-                        //    while (matchCall.Success)
-                        //    {
-                        //        paternFind = "[0-9]{1,7}:[0-9]{1,7}";
-                        //        regex = new Regex(paternFind);
-                        //        Match match = regex.Match(line);
-                        //        if (match.Success)
-                        //        {
-                        //            //File.AppendAllText(saveFile.FileName, match.Value + ":f:i\n", Encoding.UTF8);
-                        //            string second = match.Value;
-                        //            match = match.NextMatch().NextMatch().NextMatch();
-                        //            if (match.Success)
-                        //            {
-                        //                File.AppendAllText(saveFile.FileName, match.Value + ":b:i\n", Encoding.UTF8);
-                        //                File.AppendAllText(saveFile.FileName, match.Value + ":b:o\n", Encoding.UTF8);
-                        //            }
-                        //            File.AppendAllText(saveFile.FileName, second + ":f:o\n", Encoding.UTF8);
-                        //            break;
-
-                        //        }
-                        //    }
-                        //}
-
                     }
                 }
-                MessageBox.Show("Game Over!");
+                MessageBox.Show("Game Over!\nAnalise End.");
 
             }
             catch (Exception e)

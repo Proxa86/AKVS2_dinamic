@@ -12,21 +12,101 @@ namespace AKVS2_dinamic
 {
     public partial class Form1 : Form
     {
+
+        //static public string LabelInformation { get; set; }
+
+        public bool CheckCalled { get; set; }
+        public bool CheckNotCalled { get; set; }
+        public bool CheckReportFunctions { get; set; }
+        public bool CheckReportFunctionsFunctions { get; set; }
+        public bool CheckReportBranchBranch { get; set; }
+        public bool CheckSaveInFile { get; set; }
+        public bool CheckExportInFileExcel { get; set; }
+
+        public string LabelInformation {
+            get => this.labelInformations.Text;
+            set => this.labelInformations.Text = value;}
+
         public Form1()
         {
             InitializeComponent();
+
+            //listBoxOutReport.Items.Add("Вывести в excel не отработанные функции.");
+            //listBoxOutReport.SelectedIndex = 2;
+
+            this.Text = "Какого цвета зеркало?";
+
+            CheckCalled = false;
+            CheckNotCalled = false;
+            //this.labelInformations.Text = LabelInformation;
         }
 
         private void buttonOpenFolder_Click(object sender, EventArgs e)
         {
-            OpenFolder openFolder = new OpenFolder();
+            OpenFolder openFolder = new OpenFolder(this);
             openFolder.openFolderWithFiles();
         }
 
-        private void buttonPrintReportExcel_Click(object sender, EventArgs e)
+        private void buttonOutReport_Click(object sender, EventArgs e)
         {
-            BuildReport buildReport = new BuildReport();
-            buildReport.buildReportExcel();
+            //BuildReport buildReport = new BuildReport();
+            //buildReport.buildReport(listBoxOutReport.SelectedIndex);
+        }
+
+        private void checkBoxAllCall_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAllCall.Checked)
+                CheckCalled = true;
+            else
+                CheckCalled = false;
+        }
+
+        private void checkBoxNotCall_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxNotCall.Checked)
+                CheckNotCalled = true;
+            else
+                CheckNotCalled = false;
+        }
+
+        private void checkBoxAnalysisFunctions_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAnalysisFunctions.Checked)
+                CheckReportFunctions = true; 
+            else
+                CheckReportFunctions = false;
+        }
+
+        private void checkBoxAnalysisLinkFunctionFunction_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAnalysisLinkFunctionFunction.Checked)
+                CheckReportFunctionsFunctions = true;
+            else
+                CheckReportFunctionsFunctions = false;
+        }
+
+        private void checkBoxAnalysisLinkBranchBranch_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAnalysisLinkBranchBranch.Checked)
+                CheckReportBranchBranch = true;
+            else
+                CheckReportBranchBranch = false;
+        }
+
+        private void checkBoxSaveInFile_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxSaveInFile.Checked)
+                CheckSaveInFile = true;
+            else
+                CheckSaveInFile = false;
+        }
+
+        private void checkBoxExportInFileExcel_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxExportInFileExcel.Checked)
+                CheckExportInFileExcel = true;
+            else
+                CheckExportInFileExcel = false;
         }
     }
 }

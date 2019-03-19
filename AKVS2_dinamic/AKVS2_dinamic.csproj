@@ -61,7 +61,7 @@
     <Compile Include="NotCallFunctions.cs" />
     <Compile Include="Numbers.cs" />
     <Compile Include="OpenFolder.cs" />
-    <Compile Include="ParsingFile.cs" />
+    <Compile Include="SelectFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkExcel.cs" />
