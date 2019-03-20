@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AKVS2_dinamic
 {
-    class Numbers
+    class NumberMarker
     {
         public string QidIn { get; set; }
         public string QidOut { get; set; }

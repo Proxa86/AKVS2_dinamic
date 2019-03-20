@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AKVS2_dinamic
 {
-    class NotCallFunctions
+    class Functions
     {
         public string QidIn { get; set; }
         public string NameFunction { get; set; }

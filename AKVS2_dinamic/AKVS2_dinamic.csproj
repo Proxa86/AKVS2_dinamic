@@ -50,7 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildReport.cs" />
+    <Compile Include="LinkBranchBranch.cs" />
+    <Compile Include="LinkFunctionsFunctions.cs" />
     <Compile Include="FindMiningMarker.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -58,8 +59,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="NotCallFunctions.cs" />
-    <Compile Include="Numbers.cs" />
+    <Compile Include="Functions.cs" />
+    <Compile Include="NumberMarker.cs" />
     <Compile Include="OpenFolder.cs" />
     <Compile Include="SelectFile.cs" />
     <Compile Include="Program.cs" />

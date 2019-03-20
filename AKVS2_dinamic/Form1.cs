@@ -17,6 +17,7 @@ namespace AKVS2_dinamic
 
         public bool CheckCalled { get; set; }
         public bool CheckNotCalled { get; set; }
+        public bool CheckCallInDynamic { get; set; }
         public bool CheckReportFunctions { get; set; }
         public bool CheckReportFunctionsFunctions { get; set; }
         public bool CheckReportBranchBranch { get; set; }
@@ -69,6 +70,14 @@ namespace AKVS2_dinamic
                 CheckNotCalled = false;
         }
 
+        private void checkBoxCallInDynamic_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxCallInDynamic.Checked)
+                CheckCallInDynamic = true;
+            else
+                CheckCallInDynamic = false;
+        }
+
         private void checkBoxAnalysisFunctions_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxAnalysisFunctions.Checked)
@@ -88,9 +97,25 @@ namespace AKVS2_dinamic
         private void checkBoxAnalysisLinkBranchBranch_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxAnalysisLinkBranchBranch.Checked)
+            {
                 CheckReportBranchBranch = true;
+                //checkBoxAllCall.Enabled = false;
+                //checkBoxNotCall.Enabled = false;
+                //checkBoxCallInDynamic.Enabled = false;
+                checkBoxAllCall.Checked = true;
+                checkBoxNotCall.Checked = true;
+                checkBoxCallInDynamic.Checked = true;
+            }               
             else
+            {
                 CheckReportBranchBranch = false;
+                //checkBoxAllCall.Enabled = true;
+                //checkBoxNotCall.Enabled = true;
+                //checkBoxCallInDynamic.Enabled = true;
+                checkBoxAllCall.Checked = false;
+                checkBoxNotCall.Checked = false;
+                checkBoxCallInDynamic.Checked = false;
+            }
         }
 
         private void checkBoxSaveInFile_CheckedChanged(object sender, EventArgs e)

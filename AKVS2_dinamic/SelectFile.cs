@@ -37,7 +37,7 @@ namespace AKVS2_dinamic
                 FindMiningMarker findMiningMarker = new FindMiningMarker(CopyForm);
 
                 //File.WriteAllText(saveFile.FileName, "");
-                List<Numbers> numbers = new List<Numbers>();
+                //List<Numbers> numbers = new List<Numbers>();
                 string paternPath = "\\w+.{1}txt";
 
                 foreach (var filter in lParentFilters)
@@ -79,7 +79,7 @@ namespace AKVS2_dinamic
                         }
                     }
                 }
-                MessageBox.Show("Game Over!\nAnalise End.");
+                //MessageBox.Show("Game Over!\nAnalise End.");
 
             }
             catch (Exception e)

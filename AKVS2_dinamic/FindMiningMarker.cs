@@ -11,14 +11,15 @@ namespace AKVS2_dinamic
 {
     class FindMiningMarker
     {
-        //public string flagEndWork { get; set; }
-        SaveFileDialog saveFile;
         Form1 CopyForm;
         WorkExcel workExcel;
-        public List<NotCallFunctions> lNotCallFunctions { get; set; }
-        //public bool CheckCall { get; set; }
-        //public bool CheckNotCall { get; set; }
+
+        public List<Functions> lFunctions { get; set; }
+        public List<LinkFunctionsFunctions> lLinkFunctionFunction { get; set; }
+        public List<LinkBranchBranch> lLinkBranchBranch { get; set; }
         public string InformationDisplay { get; set; }
+        public string NameFile { get; set; }
+        public string PathFile { get; set; }
 
         public FindMiningMarker()
         {
@@ -26,9 +27,13 @@ namespace AKVS2_dinamic
 
         public FindMiningMarker(Form1 f)
         {
-            saveFile = new SaveFileDialog();
-            
             CopyForm = f;
+            if (CopyForm.CheckSaveInFile)
+            {
+                string pathFile = Application.StartupPath + "\\LogFile\\";
+                Directory.CreateDirectory(pathFile);
+                PathFile = pathFile;
+            }    
         }
 
         public void findFunc(string path)
@@ -36,7 +41,7 @@ namespace AKVS2_dinamic
             if(CopyForm.CheckReportFunctions)
             {
                 string[] allLinesInFile = File.ReadAllLines(path);
-                lNotCallFunctions = new List<NotCallFunctions>();
+                lFunctions = new List<Functions>();
                 int i = 0;
 
                 Regex regex;
@@ -47,32 +52,32 @@ namespace AKVS2_dinamic
                     while (call)
                     {
                         ++i;
-                        NotCallFunctions notCallFunction = new NotCallFunctions();
+                        Functions function = new Functions();
                         string paternFind = "[0-9]{1,7}:[0-9]{1,7}";
                         regex = new Regex(paternFind);
                         Match match = regex.Match(line);
                         if (match.Success)
                         {
-                            notCallFunction.QidIn = match.Value;
+                            function.QidIn = match.Value;
 
-                            paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;*,&]*\\){1}";
+                            paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;<>*,&]*\\){1}";
 
                             regex = new Regex(paternFind);
                             match = regex.Match(line);
 
                             if (match.Success)
                             {
-                                notCallFunction.NameFunction = match.Value;
+                                function.NameFunction = match.Value;
                             }
                             else
                             {
                                 paternFind = "\\w+\\:{2}\\w+\\:{2}\\w+";
                                 regex = new Regex(paternFind);
                                 match = regex.Match(line);
-                                notCallFunction.NameFunction = match.Value;
+                                function.NameFunction = match.Value;
                             }
 
-                            lNotCallFunctions.Add(notCallFunction);
+                            lFunctions.Add(function);
                             break;
                         }
                     }
@@ -81,112 +86,335 @@ namespace AKVS2_dinamic
                 if (CopyForm.CheckReportFunctions & CopyForm.CheckExportInFileExcel)
                 {
                     workExcel = new WorkExcel();
-                    workExcel.DisplayNotCallFunctions(lNotCallFunctions);
+                    workExcel.DisplayFunctions(lFunctions);
                 }
                 else if(CopyForm.CheckReportFunctions & CopyForm.CheckSaveInFile)
                 {
+                    
+                    NameFile = "akvs_dyn_thread_2.log";
 
+                    foreach (var line in allLinesInFile)
+                    {
+                        bool call = callAndNotCallFuncOrBranch(line);
+
+                        while (call)
+                        {
+                            string paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                            regex = new Regex(paternFind);
+                            Match match = regex.Match(line);
+                            if (match.Success)
+                            {
+                                File.AppendAllText(Path.Combine(PathFile, NameFile), match.Value + ":f:i\n", Encoding.ASCII);
+                                File.AppendAllText(Path.Combine(PathFile, NameFile), match.Value + ":f:o\n", Encoding.ASCII);
+                                break;
+                            }
+                        }
+                    }
                 }
-            }
-
-            
-            
+            }   
         }
 
         public void findLinkFunc(string path)
         {
-            if(CopyForm.CheckReportFunctionsFunctions & CopyForm.CheckSaveInFile)
+            if (CopyForm.CheckReportFunctionsFunctions)
             {
                 string[] allLinesInFile = File.ReadAllLines(path);
-                saveFile.FileName = "akvs_dyn_thread_3.log";
-                //File.WriteAllText(saveFile.FileName, "",Encoding.ASCII);
+                lLinkFunctionFunction = new List<LinkFunctionsFunctions>();
+                int i = 0;
+
                 Regex regex;
 
                 foreach (var line in allLinesInFile)
                 {
-
                     bool call = callAndNotCallFuncOrBranch(line);
-
                     while (call)
                     {
+                        ++i;
+                        LinkFunctionsFunctions linkFunFun = new LinkFunctionsFunctions();
                         string paternFind = "[0-9]{1,7}:[0-9]{1,7}";
                         regex = new Regex(paternFind);
                         Match match = regex.Match(line);
                         if (match.Success)
                         {
-                            File.AppendAllText(saveFile.FileName, match.Value + ":f:i\n", Encoding.ASCII);
-                            string second = match.Value;
-                            match = match.NextMatch().NextMatch().NextMatch();
+                            linkFunFun.QidOut = match.Value;
+
+                            paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;<>*,&]*\\){1}";
+
+                            regex = new Regex(paternFind);
+                            match = regex.Match(line);
+
                             if (match.Success)
                             {
-                                File.AppendAllText(saveFile.FileName, match.Value + ":f:i\n", Encoding.ASCII);
-                                File.AppendAllText(saveFile.FileName, match.Value + ":f:o\n", Encoding.ASCII);
-                            }
-                            File.AppendAllText(saveFile.FileName, second + ":f:o\n", Encoding.ASCII);
-                            break;
+                                linkFunFun.NameFunctionQidOut = match.Value;
 
+                                paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                                regex = new Regex(paternFind);
+                                match = regex.Match(line);
+                                match = match.NextMatch().NextMatch().NextMatch();
+                                if (match.Success)
+                                {
+                                    linkFunFun.QidIn = match.Value;
+
+                                    paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;<>*,&]*\\){1}";
+                                    regex = new Regex(paternFind);
+                                    match = regex.Match(line);
+                                    match = match.NextMatch().NextMatch();
+                                    if (match.Success)
+                                    {
+                                        linkFunFun.NameFunctionQidIn = match.Value;
+                                    }
+
+                                }
+
+                            }
+                            //        else
+                            //        {
+                            //            paternFind = "\\w+\\:{2}\\w+\\:{2}\\w+";
+                            //            regex = new Regex(paternFind);
+                            //            match = regex.Match(line);
+                            //            function.NameFunction = match.Value;
+                            //        }
+
+                            //        lFunctions.Add(function);
+                            //        break;
+                        }
+                        lLinkFunctionFunction.Add(linkFunFun);
+                        break;
+                    }
+                }
+
+                if (CopyForm.CheckReportFunctionsFunctions & CopyForm.CheckExportInFileExcel)
+                {
+                    workExcel = new WorkExcel();
+                    workExcel.DisplayLinkFunctionFunction(lLinkFunctionFunction);
+                }
+                else if (CopyForm.CheckReportFunctionsFunctions & CopyForm.CheckSaveInFile)
+                {
+
+                    NameFile = "akvs_dyn_thread_3.log";
+                    //File.WriteAllText(saveFile.FileName, "",Encoding.ASCII);
+
+                    foreach (var line in allLinesInFile)
+                    {
+
+                        bool call = callAndNotCallFuncOrBranch(line);
+
+                        while (call)
+                        {
+                            string paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                            regex = new Regex(paternFind);
+                            Match match = regex.Match(line);
+                            if (match.Success)
+                            {
+                                File.AppendAllText(Path.Combine(PathFile, NameFile), match.Value + ":f:i\n", Encoding.ASCII);
+                                string second = match.Value;
+                                match = match.NextMatch().NextMatch().NextMatch();
+                                if (match.Success)
+                                {
+                                    File.AppendAllText(Path.Combine(PathFile, NameFile), match.Value + ":f:i\n", Encoding.ASCII);
+                                    File.AppendAllText(Path.Combine(PathFile, NameFile), match.Value + ":f:o\n", Encoding.ASCII);
+                                }
+                                File.AppendAllText(Path.Combine(PathFile, NameFile), second + ":f:o\n", Encoding.ASCII);
+                                break;
+
+                            }
                         }
                     }
                 }
             }
+
+
         }
 
         public void findLinkBranch(string path)
         {
-            if(CopyForm.CheckReportBranchBranch & CopyForm.CheckSaveInFile)
+            List<string> lBranchKey = new List<string> { "do", "if", "forrange", "while", "catch", "for" };
+            if (CopyForm.CheckReportBranchBranch)
             {
                 string[] allLinesInFile = File.ReadAllLines(path);
-                saveFile.FileName = "akvs_dyn_thread_5.log";
-                //File.WriteAllText(saveFile.FileName, "", Encoding.ASCII);
 
-                List<Numbers> lNumbers = new List<Numbers>();
+                lLinkBranchBranch = new List<LinkBranchBranch>();
 
-                BuildReport buildReport = new BuildReport();
+                int i = 0;
+
                 Regex regex;
+
                 foreach (var line in allLinesInFile)
                 {
-
                     bool call = callAndNotCallFuncOrBranch(line);
-
-                    if (call)
+                    while (call)
                     {
+                        ++i;
+                        LinkBranchBranch linkBranBran = new LinkBranchBranch();
                         string paternFind = "[0-9]{1,7}:[0-9]{1,7}";
                         regex = new Regex(paternFind);
                         Match match = regex.Match(line);
-                        Numbers numbers = new Numbers();
                         if (match.Success)
                         {
+                            linkBranBran.QidOut = match.Value;
 
-                            numbers.QidIn = match.Value;
-                            match = match.NextMatch().NextMatch().NextMatch();
+                            paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;<>*,&]*\\){1}";
+
+                            regex = new Regex(paternFind);
+                            match = regex.Match(line);
+
                             if (match.Success)
                             {
-                                numbers.QidOut = match.Value;
-                            }
+                                linkBranBran.NameBranchQidOut = match.Value;
 
+                                paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                                regex = new Regex(paternFind);
+                                match = regex.Match(line);
+                                match = match.NextMatch().NextMatch().NextMatch();
+                                if (match.Success)
+                                {
+                                    linkBranBran.QidIn = match.Value;
+
+                                    paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;<>*,&]*\\){1}";
+                                    regex = new Regex(paternFind);
+                                    match = regex.Match(line);
+                                    match = match.NextMatch().NextMatch();
+                                    if (match.Success)
+                                    {
+                                        linkBranBran.NameBranchQidIn = match.Value;
+                                    }
+                                    else
+                                    {
+                                        foreach (var item2 in lBranchKey)
+                                        {
+                                            paternFind = item2;
+                                            regex = new Regex(paternFind);
+                                            match = regex.Match(line);
+                                            if (!match.Success)
+                                            {
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                linkBranBran.NameBranchQidIn = match.Value;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var item1 in lBranchKey)
+                                {
+                                    paternFind = item1;
+                                    regex = new Regex(paternFind);
+                                    match = regex.Match(line);
+                                    if (!match.Success)
+                                    {
+                                        continue;
+                                    }
+                                    linkBranBran.NameBranchQidOut = match.Value;
+                                    paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                                    regex = new Regex(paternFind);
+                                    match = regex.Match(line);
+                                    match = match.NextMatch().NextMatch().NextMatch();
+                                    if (match.Success)
+                                    {
+                                        linkBranBran.QidIn = match.Value;
+
+                                        paternFind = "\\w+\\:{0,2}[\\w!=]+\\({1}[\\w\\s:;<>*,&]*\\){1}";
+                                        regex = new Regex(paternFind);
+                                        match = regex.Match(line);
+                                        match = match.NextMatch().NextMatch();
+                                        if (match.Success)
+                                        {
+                                            linkBranBran.NameBranchQidIn = match.Value;
+                                        }
+                                        else
+                                        {
+                                            foreach (var item2 in lBranchKey)
+                                            {
+                                                paternFind = item2;
+                                                regex = new Regex(paternFind);
+                                                match = regex.Match(line);
+                                                if (!match.Success)
+                                                {
+                                                    continue;
+                                                }
+                                                else
+                                                {
+                                                    linkBranBran.NameBranchQidIn = match.Value;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
                         }
-                        lNumbers.Add(numbers);
+                        lLinkBranchBranch.Add(linkBranBran);
+                        break;
                     }
                 }
 
-                recursing(lNumbers);
-            }   
-        }
+                if (CopyForm.CheckReportBranchBranch & CopyForm.CheckExportInFileExcel)
+                {
+                    workExcel = new WorkExcel();
+                    workExcel.DisplayLinkBranchBranch(lLinkBranchBranch);
+                }
+                else if (CopyForm.CheckReportBranchBranch & CopyForm.CheckSaveInFile)
+                {
+                    NameFile = "akvs_dyn_thread_5.log";
 
-        public void recursing(List<Numbers> lNumbers)
-        {
-            foreach(var n in lNumbers)
-            {
-                string s = n.QidIn;
-                File.AppendAllText(saveFile.FileName, n.QidIn + ":f:i\n", Encoding.ASCII);
-                findNumber(n, lNumbers);
-                File.AppendAllText(saveFile.FileName, s + ":f:o\n", Encoding.ASCII);
+                    //File.WriteAllText(saveFile.FileName, "", Encoding.ASCII);
+
+                    List<NumberMarker> lNumbers = new List<NumberMarker>();
+
+                    LinkFunctionsFunctions buildReport = new LinkFunctionsFunctions();
+
+                    foreach (var line in allLinesInFile)
+                    {
+
+                        bool call = callAndNotCallFuncOrBranch(line);
+
+                        if (call)
+                        {
+                            string paternFind = "[0-9]{1,7}:[0-9]{1,7}";
+                            regex = new Regex(paternFind);
+                            Match match = regex.Match(line);
+                            NumberMarker number = new NumberMarker();
+                            if (match.Success)
+                            {
+
+                                number.QidIn = match.Value;
+                                match = match.NextMatch().NextMatch().NextMatch();
+                                if (match.Success)
+                                {
+                                    number.QidOut = match.Value;
+                                }
+
+                            }
+                            lNumbers.Add(number);
+                        }
+                    }
+
+                    recursing(lNumbers);
+                }
+
             }
 
-
         }
 
-        public void findNumber(Numbers n, List<Numbers> lNumbers)
+        public void recursing(List<NumberMarker> lNumbers)
+        {
+            
+            foreach (var n in lNumbers)
+            {
+                string saveQidIn = n.QidIn;
+                File.AppendAllText(Path.Combine(PathFile, NameFile), n.QidIn + ":f:i\n", Encoding.ASCII);
+                findNumber(n, lNumbers);
+                File.AppendAllText(Path.Combine(PathFile, NameFile), saveQidIn + ":f:o\n", Encoding.ASCII);
+            }
+        }
+
+        public void findNumber(NumberMarker n, List<NumberMarker> lNumbers)
         {
             if (lNumbers.Any(x => x.QidIn.Equals(n.QidOut)))
             {
@@ -195,17 +423,17 @@ namespace AKVS2_dinamic
                 if (find != 0)
                 {
                     n.QidIn = n.QidOut;
-                    File.AppendAllText(saveFile.FileName, n.QidIn + ":b:i\n", Encoding.ASCII);
+                    File.AppendAllText(Path.Combine(PathFile, NameFile), n.QidIn + ":b:i\n", Encoding.ASCII);
                     n.QidOut = lNumbers[find].QidOut;
-
+                    string saveQidIn = n.QidIn;
                     findNumber(n, lNumbers);
-                    File.AppendAllText(saveFile.FileName, n.QidIn + ":b:o\n", Encoding.ASCII);
+                    File.AppendAllText(Path.Combine(PathFile, NameFile), saveQidIn + ":b:o\n", Encoding.ASCII);
                 }
             }
             else
             {
-                File.AppendAllText(saveFile.FileName, n.QidOut + ":b:i\n", Encoding.ASCII);
-                File.AppendAllText(saveFile.FileName, n.QidOut + ":b:o\n", Encoding.ASCII);
+                File.AppendAllText(Path.Combine(PathFile, NameFile), n.QidOut + ":b:i\n", Encoding.ASCII);
+                File.AppendAllText(Path.Combine(PathFile, NameFile), n.QidOut + ":b:o\n", Encoding.ASCII);
             }
         }
 
@@ -214,19 +442,25 @@ namespace AKVS2_dinamic
             Regex regex;
             Match matchCall = null;
             string paternFind = "";
-            if (CopyForm.CheckCalled & !CopyForm.CheckNotCalled)
+            if (CopyForm.CheckCalled & !CopyForm.CheckNotCalled & !CopyForm.CheckCallInDynamic)
             {
                 paternFind = "\\scalled";
                 regex = new Regex(paternFind);
                 matchCall = regex.Match(line);
             }
-            else if (CopyForm.CheckNotCalled & !CopyForm.CheckCalled)
+            else if (CopyForm.CheckNotCalled & !CopyForm.CheckCalled & !CopyForm.CheckCallInDynamic)
             {
                 paternFind = "not_called";
                 regex = new Regex(paternFind);
                 matchCall = regex.Match(line);
             }
-            else if (!(CopyForm.CheckCalled & CopyForm.CheckNotCalled))
+            else if(CopyForm.CheckCallInDynamic & !CopyForm.CheckCalled & !CopyForm.CheckNotCalled)
+            {
+                paternFind = "dynamic_called";
+                regex = new Regex(paternFind);
+                matchCall = regex.Match(line);
+            }
+            else if (!(CopyForm.CheckCalled & CopyForm.CheckNotCalled & CopyForm.CheckCallInDynamic))
             {
                 paternFind = "\\scalled";
                 regex = new Regex(paternFind);
@@ -236,6 +470,12 @@ namespace AKVS2_dinamic
                     paternFind = "not_called";
                     regex = new Regex(paternFind);
                     matchCall = regex.Match(line);
+                    if (!matchCall.Success)
+                    {
+                        paternFind = "dynamic_called";
+                        regex = new Regex(paternFind);
+                        matchCall = regex.Match(line);
+                    }
                 }
             }
 
