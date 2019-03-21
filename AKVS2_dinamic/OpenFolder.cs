@@ -20,6 +20,7 @@ namespace AKVS2_dinamic
         {
             CopyForm = f;
             f.LabelInformation = "Please, choose folder for analise.";
+            
         }
 
         public void openFolderWithFiles()

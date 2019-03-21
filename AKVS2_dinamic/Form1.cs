@@ -44,8 +44,17 @@ namespace AKVS2_dinamic
 
         private void buttonOpenFolder_Click(object sender, EventArgs e)
         {
-            OpenFolder openFolder = new OpenFolder(this);
-            openFolder.openFolderWithFiles();
+            
+            if (!this.CheckCalled & !this.CheckNotCalled & !this.CheckCallInDynamic)
+            {
+                this.LabelInformation = "You don't choose type searching information in file!";
+                return;
+            }
+            else
+            {
+                OpenFolder openFolder = new OpenFolder(this);
+                openFolder.openFolderWithFiles();
+            }
         }
 
         private void buttonOutReport_Click(object sender, EventArgs e)
@@ -102,9 +111,9 @@ namespace AKVS2_dinamic
                 //checkBoxAllCall.Enabled = false;
                 //checkBoxNotCall.Enabled = false;
                 //checkBoxCallInDynamic.Enabled = false;
-                checkBoxAllCall.Checked = true;
-                checkBoxNotCall.Checked = true;
-                checkBoxCallInDynamic.Checked = true;
+                //checkBoxAllCall.Checked = true;
+                //checkBoxNotCall.Checked = true;
+                //checkBoxCallInDynamic.Checked = true;
             }               
             else
             {
@@ -112,9 +121,9 @@ namespace AKVS2_dinamic
                 //checkBoxAllCall.Enabled = true;
                 //checkBoxNotCall.Enabled = true;
                 //checkBoxCallInDynamic.Enabled = true;
-                checkBoxAllCall.Checked = false;
-                checkBoxNotCall.Checked = false;
-                checkBoxCallInDynamic.Checked = false;
+                //checkBoxAllCall.Checked = false;
+                //checkBoxNotCall.Checked = false;
+                //checkBoxCallInDynamic.Checked = false;
             }
         }
 

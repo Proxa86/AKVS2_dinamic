@@ -76,6 +76,7 @@ namespace AKVS2_dinamic
                                     CopyForm.Refresh();
                                 }
                                 break;
+                            default: return;
                         }
                     }
                 }
@@ -85,7 +86,9 @@ namespace AKVS2_dinamic
             catch (Exception e)
             {
                 MessageBox.Show("Can't open file.\nOriginal error: " + e.Message);
+                return;
             }
+            
 
         }
     }
